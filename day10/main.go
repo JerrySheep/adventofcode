@@ -74,7 +74,7 @@ func solution() int {
 	//	}
 	//}
 
-	mutliNumber := 1
+	multiNumber := 1
 
 	for i := 0; i < len(result) - 1; i++ {
 		temp := make([]int, 0)
@@ -83,9 +83,9 @@ func solution() int {
 			temp = append(temp, result[i])
 			i++
 		}
-		if len(temp) != 0{
+		if len(temp) != 0 {
 			temp = append(temp, result[i])
-		} else{
+		} else {
 			temp = append(temp, result[i])
 		}
 
@@ -93,11 +93,11 @@ func solution() int {
 			validNumber := 0
 			lastResult := make([]int, len(temp))
 			numberCalculate(temp, 1, &validNumber, lastResult)
-			mutliNumber *= validNumber
+			multiNumber *= validNumber
 		}
 	}
 
-	return mutliNumber
+	return multiNumber
 	//return onePlusNumber * threePlusNumber
 }
 
