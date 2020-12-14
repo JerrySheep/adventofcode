@@ -83,11 +83,7 @@ func solution() int {
 			temp = append(temp, result[i])
 			i++
 		}
-		if len(temp) != 0 {
-			temp = append(temp, result[i])
-		} else {
-			temp = append(temp, result[i])
-		}
+		temp = append(temp, result[i])
 
 		if len(temp) > 2 {
 			validNumber := 0
