@@ -19,7 +19,7 @@ func sliceCompare(first []int, second []int) bool {
 	return true
 }
 
-func numberCalculate(result []int, index int, validNumber *int, depth int, lastResult []int){
+func numberCalculate(result []int, index int, validNumber *int, lastResult []int){
 	if index != len(result) - 1 {
 		temp := make([]int, len(result))
 		copy(temp, result)
@@ -28,7 +28,7 @@ func numberCalculate(result []int, index int, validNumber *int, depth int, lastR
 				*validNumber++
 				copy(lastResult, result)
 			}
-			numberCalculate(temp, index + 1, validNumber, depth + 1, lastResult)
+			numberCalculate(temp, index + 1, validNumber, lastResult)
 		}
 
 		result[index] = result[index - 1]
@@ -38,7 +38,7 @@ func numberCalculate(result []int, index int, validNumber *int, depth int, lastR
 				*validNumber++
 				copy(lastResult, result)
 			}
-			numberCalculate(temp, index + 1, validNumber, depth + 1, lastResult)
+			numberCalculate(temp, index + 1, validNumber, lastResult)
 		}
 	}
 }
@@ -92,7 +92,7 @@ func solution() int {
 		if len(temp) > 2 {
 			validNumber := 0
 			lastResult := make([]int, len(temp))
-			numberCalculate(temp, 1, &validNumber, 1, lastResult)
+			numberCalculate(temp, 1, &validNumber, lastResult)
 			mutliNumber *= validNumber
 		}
 	}
