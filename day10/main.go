@@ -9,6 +9,40 @@ import (
 	"strings"
 )
 
+func sliceCompare(first []int, second []int) bool {
+	for i := 0; i < len(first); i++ {
+		if first[i] != second[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
+func numberCalculate(result []int, index int, validNumber *int, depth int, lastResult []int){
+	if index != len(result) - 1 {
+		temp := make([]int, len(result))
+		copy(temp, result)
+		if result[index + 1] - result[index] < 4 {
+			if !sliceCompare(lastResult, result) {
+				*validNumber++
+				copy(lastResult, result)
+			}
+			numberCalculate(temp, index + 1, validNumber, depth + 1, lastResult)
+		}
+
+		result[index] = result[index - 1]
+		copy(temp, result)
+		if result[index + 1] - result[index] < 4 {
+			if !sliceCompare(lastResult, result) {
+				*validNumber++
+				copy(lastResult, result)
+			}
+			numberCalculate(temp, index + 1, validNumber, depth + 1, lastResult)
+		}
+	}
+}
+
 func solution() int {
 	result := make([]int, 0)
 	result = append(result, 0)
@@ -55,14 +89,12 @@ func solution() int {
 			temp = append(temp, result[i])
 		}
 
-		if len(temp) == 3 {
-			mutliNumber *= 2
-		} else if len(temp) == 4 {
-			mutliNumber *= 4
-		} else if len(temp) == 5 {
-			mutliNumber *= 7
+		if len(temp) > 2 {
+			validNumber := 0
+			lastResult := make([]int, len(temp))
+			numberCalculate(temp, 1, &validNumber, 1, lastResult)
+			mutliNumber *= validNumber
 		}
-		//fmt.Println(temp)
 	}
 
 	return mutliNumber
