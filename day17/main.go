@@ -46,12 +46,12 @@ func solution() int {
 		}
 	}
 
-	matrix := make([]Coordinate, 0)
+	matrix := make(map[Coordinate]int, 0)
 	for i := 0; i < len(result); i++ {
 		for j := 0; j < len(result[i]); j++ {
 			if result[i][j] == '#' {
 				coordinate := Coordinate{i, j, 0, 0}
-				matrix = append(matrix, coordinate)
+				matrix[coordinate] = 1
 			}
 		}
 	}
@@ -60,32 +60,24 @@ func solution() int {
 	for count < 6 {
 		neighbors := make(map[Coordinate]int, 0)
 
-		for i := 0; i < len(matrix); i++ {
+		for key, _ := range matrix {
 			for j := 0; j < len(coordinates); j++ {
-				temp := Coordinate{matrix[i].x + coordinates[j].x, matrix[i].y + coordinates[j].y, matrix[i].z + coordinates[j].z, matrix[i].w + coordinates[j].w}
+				temp := Coordinate{key.x + coordinates[j].x, key.y + coordinates[j].y, key.z + coordinates[j].z, key.w + coordinates[j].w}
 				neighbors[temp] += 1
 			}
 		}
 
-		length := len(matrix)
+		newMatrix := make(map[Coordinate]int, 0)
+
 		for key, value := range neighbors {
+			_, ok := matrix[key]
 			if value == 3 {
-				matrix = append(matrix, key)
-			} else if value == 2 {
-				judge := false
-				for i := 0; i < length; i++ {
-					if key == matrix[i] {
-						judge = true
-						break
-					}
-				}
-				if judge {
-					matrix = append(matrix, key)
-				}
+				newMatrix[key] = 1
+			} else if value == 2 && ok {
+				newMatrix[key] = 1
 			}
 		}
-
-		matrix = matrix[length:]
+		matrix = newMatrix
 		count++
 	}
 
@@ -96,3 +88,4 @@ func main(){
 	answer := solution()
 	fmt.Println(answer)
 }
+
