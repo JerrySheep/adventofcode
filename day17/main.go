@@ -7,6 +7,13 @@ import (
 	"strings"
 )
 
+type Coordinate struct {
+	x int
+	y int
+	z int
+	w int
+}
+
 func solution() int {
 	result := make([]string, 0)
 
@@ -24,93 +31,65 @@ func solution() int {
 		}
 	}
 
-	store := make([][][][]int, 0)
-
-	for m := 0; m < 30; m++ {
-		highTemp := make([][][]int, 0)
-		for i := 0; i < 30; i++ {
-			temp := make([][]int, 0)
-			for j := 0; j < 30; j++ {
-				number := make([]int, 30)
-				temp = append(temp, number)
+	coordinates := make([]Coordinate, 0)
+	for x := -1; x <= 1; x++ {
+		for y := -1; y <= 1; y++ {
+			for z := -1; z <= 1; z++ {
+				for w := -1; w <= 1; w++ {
+					if x == 0 && y == 0 && z == 0 && w == 0 {
+						continue
+					}
+					coordinate := Coordinate{x, y, z, w}
+					coordinates = append(coordinates, coordinate)
+				}
 			}
-			highTemp = append(highTemp, temp)
 		}
-		store = append(store, highTemp)
 	}
 
-
+	matrix := make([]Coordinate, 0)
 	for i := 0; i < len(result); i++ {
 		for j := 0; j < len(result[i]); j++ {
 			if result[i][j] == '#' {
-				store[i + 10][j + 10][10][10] = 1
+				coordinate := Coordinate{i, j, 0, 0}
+				matrix = append(matrix, coordinate)
 			}
 		}
 	}
 
 	count := 0
 	for count < 6 {
-		newTemp := make([][][][]int, 0)
-		//copy(newTemp, store)
+		neighbors := make(map[Coordinate]int, 0)
 
-		for m := 0; m < 30; m++ {
-			highTemp := make([][][]int, 0)
-			for i := 0; i < 30; i++ {
-				temp := make([][]int, 0)
-				for j := 0; j < 30; j++ {
-					deepTemp := make([]int, 0)
-					for k := 0; k < 30; k++ {
-						deepTemp = append(deepTemp, store[m][i][j][k])
-					}
-					temp = append(temp, deepTemp)
-				}
-				highTemp = append(highTemp, temp)
+		for i := 0; i < len(matrix); i++ {
+			for j := 0; j < len(coordinates); j++ {
+				temp := Coordinate{matrix[i].x + coordinates[j].x, matrix[i].y + coordinates[j].y, matrix[i].z + coordinates[j].z, matrix[i].w + coordinates[j].w}
+				neighbors[temp] += 1
 			}
-			newTemp = append(newTemp, highTemp)
 		}
 
-		for i := 3; i < 27; i++ {
-			for j := 3; j < 27; j++ {
-				for k := 3; k < 27; k++ {
-					for n := 3; n < 27; n++ {
-						number := 0
-						for m := i - 1; m <= i + 1; m++ {
-							for p := j - 1; p <= j + 1; p++ {
-								for q := k - 1; q <= k + 1; q++ {
-									for x := n - 1; x <= n + 1; x++ {
-										if newTemp[m][p][q][x] == 1 {
-											number++
-										}
-									}
-								}
-							}
-						}
-						if newTemp[i][j][k][n] == 1 && !(number == 3 || number == 4) {
-							store[i][j][k][n] = 0
-						} else if newTemp[i][j][k][n] == 0 && number == 3 {
-							store[i][j][k][n] = 1
-						}
+		length := len(matrix)
+		for key, value := range neighbors {
+			if value == 3 {
+				matrix = append(matrix, key)
+			} else if value == 2 {
+				judge := false
+				for i := 0; i < length; i++ {
+					if key == matrix[i] {
+						judge = true
+						break
 					}
+				}
+				if judge {
+					matrix = append(matrix, key)
 				}
 			}
 		}
+
+		matrix = matrix[length:]
 		count++
 	}
 
-	countNumber := 0
-	for i := 0; i < 30; i++ {
-		for j := 0; j < 30; j++ {
-			for k := 0; k < 30; k++ {
-				for n := 0; n < 30; n++ {
-					if store[i][j][k][n] == 1 {
-						countNumber++
-					}
-				}
-			}
-		}
-	}
-
-	return countNumber
+	return len(matrix)
 }
 
 func main(){
