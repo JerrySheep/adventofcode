@@ -10,7 +10,7 @@ import (
 )
 
 type Rule struct {
-	Literal string
+	Literal  string
 	Children [][]int
 }
 
@@ -36,7 +36,7 @@ func match(rules RuleSet, ruleNo int, s string) []int {
 				matches := match(rules, singleChild, s[matchLength:len(s)])
 
 				for _, value := range matches {
-					newPotentialMatches = append(newPotentialMatches, value + matchLength)
+					newPotentialMatches = append(newPotentialMatches, value+matchLength)
 				}
 			}
 			potentialMatches = newPotentialMatches
@@ -47,7 +47,7 @@ func match(rules RuleSet, ruleNo int, s string) []int {
 	return matchedChars
 }
 
-func solution() int{
+func solution() int {
 	result := make([]string, 0)
 
 	for _, filename := range os.Args[1:] {
@@ -62,7 +62,7 @@ func solution() int{
 		}
 	}
 
-	result = result[:len(result) - 1]
+	result = result[:len(result)-1]
 
 	rules := make(RuleSet)
 	messages := make([]string, 0)
@@ -86,10 +86,10 @@ func solution() int{
 		}
 
 		rule := Rule{}
-		if s[index + 2] == '"' {
-			rule.Literal = s[index + 3 : len(s) - 1]
+		if s[index+2] == '"' {
+			rule.Literal = s[index+3 : len(s)-1]
 		} else {
-			matches := strings.Split(s[index + 2 : len(s)], " | ")
+			matches := strings.Split(s[index+2:len(s)], " | ")
 			for _, m := range matches {
 				elements := strings.Split(m, " ")
 				group := make([]int, 0)
@@ -114,7 +114,7 @@ func solution() int{
 	for _, m := range messages {
 		symbolMatches := match(rules, 0, m)
 		for _, times := range symbolMatches {
-			if times == len(m){
+			if times == len(m) {
 				matches++
 				break
 			}
@@ -124,7 +124,7 @@ func solution() int{
 	return matches
 }
 
-func main(){
+func main() {
 	answer := solution()
 	fmt.Println(answer)
 }
