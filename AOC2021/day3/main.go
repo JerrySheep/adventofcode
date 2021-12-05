@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"math"
 	"os"
 	"strings"
 )
@@ -30,76 +29,25 @@ func solution() int{
 	copy(oxygen_result, result)
 	copy(co2_result, result)
 
-	index := 0
-	for len(oxygen_result) > 1 {
-		count := 0
-		for i := 0; i < len(oxygen_result); i++{
-			if oxygen_result[i][index] == '0' {
-				count -= 1
-			} else {
-				count += 1
-			}
-		}
-
-		for i := 0; i < len(oxygen_result); i++{
-			if count >= 0 {
-				if oxygen_result[i][index] == '0' {
-					oxygen_result = append(oxygen_result[:i], oxygen_result[i + 1:]...)
-					i--
-				}
-			} else {
-				if oxygen_result[i][index] == '1' {
-					oxygen_result = append(oxygen_result[:i], oxygen_result[i + 1:]...)
-					i--
-				}
-			}
-		}
-		index++
-	}
-
-	index = 0
-	for len(co2_result) > 1 {
-		count := 0
-		for i := 0; i < len(co2_result); i++{
-			if co2_result[i][index] == '0' {
-				count -= 1
-			} else {
-				count += 1
-			}
-		}
-
-		for i := 0; i < len(co2_result); i++{
-			if count >= 0 {
-				if co2_result[i][index] == '1' {
-					co2_result = append(co2_result[:i], co2_result[i + 1:]...)
-					i--
-				}
-			} else {
-				if co2_result[i][index] == '0' {
-					co2_result = append(co2_result[:i], co2_result[i + 1:]...)
-					i--
-				}
-			}
-		}
-		index++
-	}
+	oxygen_result = dealResult(oxygen_result, '1', '0')
+	co2_result = dealResult(co2_result, '0', '1')
 
 	oxygen := 0
 	co2 := 0
 	count := 0.0
-	for i := len(oxygen_result[0]) - 1; i >= 0; i-- {
+	for i := 0; i < len(oxygen_result[0]); i++ {
+		oxygen <<= 1
+		co2 <<= 1
 		if oxygen_result[0][i] == '1' {
-			oxygen += int(math.Pow(2, count))
+			oxygen += 1
 		}
 		if co2_result[0][i] == '1' {
-			co2 += int(math.Pow(2, count))
+			co2 += 1
 		}
 		count++
 	}
 
 	return oxygen * co2
-
-
 
 	//store := make([]int, len(result[0]))
 	//for i := 0; i < len(result); i++ {
@@ -125,6 +73,37 @@ func solution() int{
 	//}
 
 	//return gamma * epsilon
+}
+
+func dealResult(result []string, staySymbol byte, deleteSymbol byte) []string{
+	index := 0
+	for len(result) > 1 {
+		count := 0
+		for i := 0; i < len(result); i++{
+			if result[i][index] == '1' {
+				count += 1
+			} else {
+				count -= 1
+			}
+		}
+
+		for i := 0; i < len(result); i++{
+			if count >= 0 {
+				if result[i][index] == deleteSymbol {
+					result = append(result[:i], result[i + 1:]...)
+					i--
+				}
+			} else if count < 0 {
+				if result[i][index] == staySymbol {
+					result = append(result[:i], result[i + 1:]...)
+					i--
+				}
+			}
+		}
+		index++
+	}
+
+	return result
 }
 
 func main(){
