@@ -44,11 +44,10 @@ func solution() int {
 			if j == 0 {
 				eightCount += temp
 				sixCount += temp
-				count[0] = 0
 			} else {
 				count[j - 1] += temp
-				count[j] = 0
 			}
+			count[j] = 0
 		}
 		count[8] += eightCount
 		count[6] += sixCount
